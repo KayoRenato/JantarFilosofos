@@ -1,1 +1,1 @@
-# JantarFilosofos
+# Philosophers' Dinner
