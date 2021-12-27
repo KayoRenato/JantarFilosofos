@@ -1,5 +1,6 @@
 public class Table {
 
+
     String[] names = {"Socrates", "Platao", "Aristoteles", "Maquiavel", "Descartes"};
     private final boolean[] fork;
 
@@ -36,7 +37,9 @@ public class Table {
 
     }
 
+
     public boolean statusForks(int id) {
+
 
         int idRightName, idLeftName;
 
@@ -52,6 +55,7 @@ public class Table {
             idLeftName = id + 1;
         }
 
+
         if (!statusLeftFork(id) || !statusRightFork(id)) {
             if (!statusLeftFork(id)) {
                 System.out.println("O garfo esquerdo esta com " + this.names[idLeftName] + ".");
@@ -61,11 +65,13 @@ public class Table {
                 System.out.println("O garfo direito esta com " + this.names[idRightName] + ".");
             }
             System.out.println("O Filosofo nao conseguiu comer.");
+
             return false;
         }
 
         return true;
     }
+
 
     public void getRightFork(int id, String name) {
         if (!this.fork[id]) {
@@ -78,7 +84,9 @@ public class Table {
 
     }
 
+
     public void getLeftFork(int id, String name) {
+
         int id_ = id;
 
         if (id == 4) {
@@ -86,6 +94,7 @@ public class Table {
         } else {
             id_ += 1;
         }
+
 
         if (!this.fork[id_]) {
             System.err.println("O garfo esquerdo esta em uso.");
@@ -105,6 +114,7 @@ public class Table {
 
         downLeftFork(id);
         downRightFork(id);
+
         System.out.println("O Filosofo " + nome + " devolveu os garfos.");
         notifyAll();
     }
@@ -112,4 +122,5 @@ public class Table {
     public synchronized void waitFork() throws InterruptedException {
         wait();
     }
+
 }
