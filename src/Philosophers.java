@@ -1,8 +1,8 @@
 public class Philosophers extends Thread {
 
-    private int id;
-    private String name;
-    private Table table;
+    private final int id;
+    private final String name;
+    private final Table table;
 
     public Philosophers(Table table, int id, String name) {
         this.table = table;
@@ -11,46 +11,46 @@ public class Philosophers extends Thread {
     }
 
     public void run() {
+        think();
         while (true) {
-            this.think();
-            this.tryEat();
+            try {
+                this.tryEat();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     private void think() {
         System.out.println("O Filosofo " + name + " esta pensando.\n");
-        try {
-            sleep((this.id + 1) * 1000);
-        } catch (Exception e) {
-            e.getMessage();
-        }
+
     }
 
-    private synchronized void tryEat() {
+    private synchronized void tryEat() throws InterruptedException {
         System.out.println("O Filosofo " + name + " esta tentando comer.");
-        if (table.getTwo(this.id)) {
-            table.getRightFork(this.id, this.name);
-            table.getLeftFork(this.id, this.name);
+
+        if (table.statusForks(this.id)) {
+            table.getForks(this.id, this.name);
             eat();
             downFork();
         } else {
-            System.out.println("O Filosofo " + name + " nao conseguiu comer.");
+            this.think();
+            table.waitFork();
         }
+
     }
 
     private void eat() {
         System.out.println("O Filosofo " + name + " esta comendo.\n");
         try {
-            sleep((this.id + 1) * 5000);
+            sleep(3000);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void downFork() {
-
         table.downFork(this.id, this.name);
     }
-
 
 }

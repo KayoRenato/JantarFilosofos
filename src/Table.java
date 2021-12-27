@@ -1,7 +1,8 @@
 public class Table {
 
-    private boolean[] fork;
-    String names[] = {"Socrates", "Platao", "Aristoteles", "Maquiavel", "Descartes"};
+
+    String[] names = {"Socrates", "Platao", "Aristoteles", "Maquiavel", "Descartes"};
+    private final boolean[] fork;
 
     public Table() {
         this.fork = new boolean[5];
@@ -36,7 +37,10 @@ public class Table {
 
     }
 
-    public synchronized boolean getTwo(int id) {
+
+    public boolean statusForks(int id) {
+
+
         int idRightName, idLeftName;
 
         if (id == 0) {
@@ -51,30 +55,38 @@ public class Table {
             idLeftName = id + 1;
         }
 
-        if (!statusLeftFork(id)) {
-            System.out.println("O garfo esquerdo esta com " + this.names[idLeftName] + ".");
-            return false;
-        } else if (!statusRightFork(id)) {
-            System.out.println("O garfo direito esta com " + this.names[idRightName] + ".");
+
+        if (!statusLeftFork(id) || !statusRightFork(id)) {
+            if (!statusLeftFork(id)) {
+                System.out.println("O garfo esquerdo esta com " + this.names[idLeftName] + ".");
+            }
+
+            if (!statusRightFork(id)) {
+                System.out.println("O garfo direito esta com " + this.names[idRightName] + ".");
+            }
+            System.out.println("O Filosofo nao conseguiu comer.");
+
             return false;
         }
 
         return true;
     }
 
-    public synchronized boolean getRightFork(int id, String name) {
-        if (this.fork[id] == false) {
+
+    public void getRightFork(int id, String name) {
+        if (!this.fork[id]) {
             System.err.println("O garfo direita esta em uso.");
-            return false;
+
         } else {
             this.fork[id] = false;
-            System.out.println("O Philosophers " + name + " pegou o garfo direita.");
-            return true;
+            System.out.println("O Filosofo " + name + " pegou o garfo direita.");
         }
 
     }
 
-    public synchronized boolean getLeftFork(int id, String name) {
+
+    public void getLeftFork(int id, String name) {
+
         int id_ = id;
 
         if (id == 4) {
@@ -83,14 +95,19 @@ public class Table {
             id_ += 1;
         }
 
-        if (this.fork[id_] == false) {
+
+        if (!this.fork[id_]) {
             System.err.println("O garfo esquerdo esta em uso.");
-            return false;
+
         } else {
             this.fork[id_] = false;
             System.out.println("O Philosophers " + name + " pegou o garfo esquerda.");
-            return true;
         }
+    }
+
+    public void getForks(int id, String name)  {
+        this.getRightFork(id, name);
+        this.getLeftFork(id, name);
     }
 
     public synchronized void downFork(int id, String nome) {
@@ -98,9 +115,12 @@ public class Table {
         downLeftFork(id);
         downRightFork(id);
 
-        System.out.println("O Philosophers " + nome + " devolveu os garfos.");
-
+        System.out.println("O Filosofo " + nome + " devolveu os garfos.");
+        notifyAll();
     }
 
+    public synchronized void waitFork() throws InterruptedException {
+        wait();
+    }
 
 }
